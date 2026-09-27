@@ -1,28 +1,20 @@
 const express = require("express")
 const connectDB = require("./config/database")
-const User = require("./models/user")
-
 const app= express()
+const User = require("./models/user")
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
+const cookieParser = require('cookie-parser')
+const {authUser} = require("./middlewares/auth")
+const authRouter = require("./routes/auth")
+ 
 
-app.post("/singup", async(req, res)=>{
 
-    const user = new User({
-        firstName:"Yogesh",
-        lastNmae:"Nanvate",
-        emailId:"yogesh@gmail.com",
-        password:"yogesh@7729",
-    })
+app.use(express.json())
+app.use(cookieParser())
+app.use("/", authRouter)
 
-    try {
-        await user.save()
-    res.send("User data Added Successfully.....")
-    } catch (err){
-        res.status(400).send("Error saving to user" + err)
-    }
 
-    
-
-})
 
 connectDB().then(()=>{
     console.log("database connntected")
