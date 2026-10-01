@@ -9,18 +9,18 @@ const userAuth = async (req, res, next) => {
       throw new Error("Token is not valid");
     }
 
-    const decodeObj = await jwt.verify(token, "YOGESH@7729");
-
+    const decodeObj = jwt.verify(token, "Yogesh@7729");
     const { _id } = decodeObj;
+    const user = await User.findById(_id);
 
-    const user = await User.findyId(_id);
     if (!user) {
-      throw new Error("User not Found");
+      throw new Error("User not found");
     }
+
     req.user = user;
-    next();
+    return next();
   } catch (err) {
-    res.status(400).send("ERROR: " + err.message);
+    return res.status(400).send("ERROR: " + err.message);
   }
 };
 
